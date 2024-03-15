@@ -4,12 +4,10 @@ import requests
 app = Flask(__name__)
 
 response = requests.get("https://randomuser.me/api")
-print(f'hi {response.status_code}')
 
 @app.route("/", methods=["GET"])
 def HOME_ROUTE():
-    return response.json()
-    # return {"response": [1,2,3,4,5]}
+    return {"response": "Welcome Home :)"}
 
 
 @app.route("/params/<one>/<two>", methods=["GET", "POST"])
@@ -23,3 +21,12 @@ def PARAMS_ROUTE(one, two):
     if (request.method) == "POST":
         body = request.json #do i need () here?
         return body
+    
+@app.route("/randomuser", methods=["GET"])
+def RANDOM_USER_ROUTE():
+    return response.json()
+    
+@app.route("/gender", methods=["GET"])
+def GENDER_ROUTE():
+    gender = response.json()["results"][0]["gender"]
+    return gender
