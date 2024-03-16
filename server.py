@@ -3,7 +3,8 @@ import requests
 
 app = Flask(__name__)
 
-response = requests.get("https://randomuser.me/api")
+# response = requests.get("https://randomuser.me/api")
+response = requests.get("https://openpaymentsdata.cms.gov/api/1/metastore/schemas/dataset/items/df01c2f8-dc1f-4e79-96cb-8208beaf143c")
 
 @app.route("/", methods=["GET"])
 def HOME_ROUTE():
@@ -22,11 +23,15 @@ def PARAMS_ROUTE(one, two):
         body = request.json #do i need () here?
         return body
     
-@app.route("/randomuser", methods=["GET"])
-def RANDOM_USER_ROUTE():
+@app.route("/data", methods=["GET"])
+def DATA_ROUTE():
     return response.json()
     
-@app.route("/gender", methods=["GET"])
-def GENDER_ROUTE():
-    gender = response.json()["results"][0]["gender"]
-    return gender
+# @app.route("/randomuser", methods=["GET"])
+# def RANDOM_USER_ROUTE():
+#     return response.json()
+    
+# @app.route("/gender", methods=["GET"])
+# def GENDER_ROUTE():
+#     gender = response.json()["results"][0]["gender"]
+#     return gender
