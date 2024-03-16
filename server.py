@@ -1,7 +1,9 @@
 from flask import Flask, request
+from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
+CORS(app)
 
 # response = requests.get("https://randomuser.me/api")
 response = requests.get("https://openpaymentsdata.cms.gov/api/1/metastore/schemas/dataset/items/df01c2f8-dc1f-4e79-96cb-8208beaf143c")
