@@ -5,8 +5,10 @@ import requests
 app = Flask(__name__)
 CORS(app)
 
-# response = requests.get("https://randomuser.me/api")
-response = requests.get("https://openpaymentsdata.cms.gov/api/1/metastore/schemas/dataset/items/df01c2f8-dc1f-4e79-96cb-8208beaf143c")
+# write function here to dynamically return API endpoint w/ most recent year's data
+
+# for now, just use static endpoint for 2022 general payments
+response = requests.get("https://openpaymentsdata.cms.gov/api/1/datastore/query/66dfcf9a-2a9e-54b7-a0fe-cae3e42f3e8f")
 
 @app.route("/", methods=["GET"])
 def HOME_ROUTE():
