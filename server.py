@@ -10,7 +10,7 @@ CORS(app)
 # ------------------------------------------------------------------------------------
 
 # but for now, just use static endpoint for 2022 general payments
-response = requests.get("https://openpaymentsdata.cms.gov/api/1/datastore/query/66dfcf9a-2a9e-54b7-a0fe-cae3e42f3e8f?limit=2")
+response = requests.get("https://openpaymentsdata.cms.gov/api/1/datastore/query/66dfcf9a-2a9e-54b7-a0fe-cae3e42f3e8f?limit=20")
 
 @app.route("/", methods=["GET"])
 def HOME_ROUTE():
