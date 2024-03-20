@@ -16,7 +16,7 @@ response = requests.get("https://openpaymentsdata.cms.gov/api/1/datastore/query/
 def HOME_ROUTE():
     return {"response": "Welcome Home :)"}
     
-@app.route("/data", methods=["GET"])
+@app.route("/data", methods=["GET", "POST"])
 def DATA_ROUTE():
     all_payments = response.json()["results"]
     print(len(all_payments))
