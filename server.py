@@ -20,10 +20,11 @@ def HOME_ROUTE():
 def DATA_ROUTE(currentPage):
     # Offset refers to the number of records to skip before querying the # of records specified by the limit parameter. This is useful for making smaller API calls based on the page number sent by the frontend, which is what is being done here.
     offset = (int(currentPage) - 1) * 50
-    single_page_response = requests.get(f"https://openpaymentsdata.cms.gov/api/1/datastore/query/66dfcf9a-2a9e-54b7-a0fe-cae3e42f3e8f?limit=50&offset={offset}")
+    data_url = f"https://openpaymentsdata.cms.gov/api/1/datastore/query/66dfcf9a-2a9e-54b7-a0fe-cae3e42f3e8f?limit=50&offset={offset}"
+    single_page_response = requests.get(data_url)
     all_payments = single_page_response.json()["results"]
     
-    # The following code returns all payments > $10. This is because all the fields in database are string types. Although the API offers using SQL in the endpoints as an option to return a specific query, it doesn't work when interacting with non-string types, such as floats, in this case. Therefore it must be manually done in this backend.
+    # The following code manipulates the response to only payments > $10. This is because all the fields in database are string types. Although the API offers using SQL in the endpoints as an option to return a specific query, it doesn't work when interacting with non-string types, such as floats, in this case. Therefore it must be manually done in this backend.
     payments_over_10 = []
     for payment in all_payments: 
         payment_int = float(payment["total_amount_of_payment_usdollars"])
@@ -31,4 +32,10 @@ def DATA_ROUTE(currentPage):
     
     return payments_over_10
 
-# @app.route("/search/<recipient_type>/<city>", methods="GET")
+@app.route("/search/<recipient_type>", methods=["GET"])
+def SEARCH_ROUTE(recipient_type):
+    search_url=f'https://openpaymentsdata.cms.gov/api/1/datastore/sql?query=[SELECT * FROM 66dfcf9a-2a9e-54b7-a0fe-cae3e42f3e8f][WHERE covered_recipient_primary_type_1 = "{recipient_type}"][LIMIT 1]'
+    response = requests.get(search_url)
+    search_results = response.json()
+    
+    return search_results
