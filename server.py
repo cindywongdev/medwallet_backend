@@ -18,10 +18,10 @@ def HOME_ROUTE():
     
 @app.route("/data", methods=["GET", "POST"])
 def DATA_ROUTE():  
-    currentPage = request.json["currentPage"]
-    print(currentPage)
-    
-    
+    if (request.method) == "POST":
+        currentPage = request.json["currentPage"]
+        print(currentPage)
+        
     all_payments = response.json()["results"]
     
     # The following code returns all payments > $10. This is because all the fields in database are string types. Although the API offers using SQL in the endpoints as an option to return a specific query, it doesn't work when interacting with non-string types, such as floats, in this case. Therefore it must be manually done in this backend.
