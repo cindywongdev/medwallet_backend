@@ -21,8 +21,13 @@ def DATA_ROUTE():
     if (request.method) == "POST":
         currentPage = request.json["currentPage"]
         print(currentPage)
+        offset = (currentPage - 1) * 50
         
-    all_payments = response.json()["results"]
+        single_page_response = requests.get(f"https://openpaymentsdata.cms.gov/api/1/datastore/query/66dfcf9a-2a9e-54b7-a0fe-cae3e42f3e8f?limit=50&offset={offset}")
+        
+        
+    # all_payments = response.json()["results"]
+    all_payments = single_page_response.json()["results"]
     
     # The following code returns all payments > $10. This is because all the fields in database are string types. Although the API offers using SQL in the endpoints as an option to return a specific query, it doesn't work when interacting with non-string types, such as floats, in this case. Therefore it must be manually done in this backend.
     payments_over_10 = []
