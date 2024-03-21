@@ -34,8 +34,21 @@ def DATA_ROUTE(currentPage):
 
 @app.route("/search/<recipient_type>", methods=["GET"])
 def SEARCH_ROUTE(recipient_type):
-    search_url=f'https://openpaymentsdata.cms.gov/api/1/datastore/sql?query=[SELECT * FROM 66dfcf9a-2a9e-54b7-a0fe-cae3e42f3e8f][WHERE covered_recipient_primary_type_1 = "{recipient_type}"][LIMIT 1]'
+    search_url=f'https://openpaymentsdata.cms.gov/api/1/datastore/sql?query=[SELECT * FROM 66dfcf9a-2a9e-54b7-a0fe-cae3e42f3e8f][WHERE covered_recipient_primary_type_1 = "{recipient_type}"][LIMIT 50]'
     response = requests.get(search_url)
     search_results = response.json()
     
-    return search_results
+    
+    # For this API endpoint, the response consists of objects with title-case keys, which is different from the endpoint in the DATA_ROUTE, which returns lowercase keys. As such, the frontend has been written to access lowercase keys and cannot access these title-case keys. Therefore, the following code converts all the keys to lowercase.
+    # On Efficiency: While the following code has a high Time Complexity of 0(n^2), I chose to handle this issue on the backend rather than manipulating the frontend because:
+        # 1) It follows the logic of the DATA_ROUTE above where the data is manipulated to a satisfactory quality, such that the frontend can consume it without more manipulation.
+        # 2) The frontend code becomes messy when written to accept both cases.
+        # 3) The size of the response is limited to 50, which is currently manageable. If that were to increase significantly, it may be better to manipulate the frontend to accept both cases.
+    
+    search_results_lowercase = []
+    for search_result in search_results:
+        search_result_lowercase = {}
+        for key, value in search_result.items():
+            search_result_lowercase[key.lower()] = value
+        search_results_lowercase.append(search_result_lowercase)
+    return search_results_lowercase
