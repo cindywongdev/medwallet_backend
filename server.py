@@ -23,8 +23,10 @@ def DATA_ROUTE():
         print(currentPage)
         offset = (currentPage - 1) * 50
         
-        single_page_response = requests.get(f"https://openpaymentsdata.cms.gov/api/1/datastore/query/66dfcf9a-2a9e-54b7-a0fe-cae3e42f3e8f?limit=50&offset={offset}")
+    elif (request.method) == "GET":
+        offset = 0
         
+    single_page_response = requests.get(f"https://openpaymentsdata.cms.gov/api/1/datastore/query/66dfcf9a-2a9e-54b7-a0fe-cae3e42f3e8f?limit=50&offset={offset}")
         
     # all_payments = response.json()["results"]
     all_payments = single_page_response.json()["results"]
