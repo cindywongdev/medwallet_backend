@@ -16,17 +16,10 @@ response = requests.get("https://openpaymentsdata.cms.gov/api/1/datastore/query/
 def HOME_ROUTE():
     return {"response": "Welcome Home :)"}
     
-@app.route("/data", methods=["GET", "POST"])
-def DATA_ROUTE():
+@app.route("/data/<currentPage>", methods=["GET", "POST"])
+def DATA_ROUTE(currentPage):
     # Offset refers to the number of records to skip before querying the # of records specified by the limit parameter. This is useful for making smaller API calls based on the page number sent by the frontend, which is what is being done here.
-    if (request.method) == "POST":
-        currentPage = request.json["currentPage"]
-        offset = (currentPage - 1) * 50
-    
-    # All frontend requests are automatically a POST request. However, during development, this backend is often directly accessed in the browser, sending GET requests, so it is necessary to specify an offset of 0 here.
-    elif (request.method) == "GET":
-        offset = 0
-        
+    offset = (int(currentPage) - 1) * 50
     single_page_response = requests.get(f"https://openpaymentsdata.cms.gov/api/1/datastore/query/66dfcf9a-2a9e-54b7-a0fe-cae3e42f3e8f?limit=50&offset={offset}")
     all_payments = single_page_response.json()["results"]
     
@@ -37,3 +30,5 @@ def DATA_ROUTE():
         payments_over_10.append(payment) if payment_int >= 10 else None
     
     return payments_over_10
+
+# @app.route("/search/<recipient_type>/<city>", methods="GET")
