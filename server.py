@@ -17,18 +17,17 @@ def HOME_ROUTE():
     return {"response": "Welcome Home :)"}
     
 @app.route("/data", methods=["GET", "POST"])
-def DATA_ROUTE():  
+def DATA_ROUTE():
+    # Offset refers to the number of records to skip before querying the # of records specified by the limit parameter. This is useful for making smaller API calls based on the page number sent by the frontend, which is what is being done here.
     if (request.method) == "POST":
         currentPage = request.json["currentPage"]
-        print(currentPage)
         offset = (currentPage - 1) * 50
-        
+    
+    # All frontend requests are automatically a POST request. However, during development, this backend is often directly accessed in the browser, sending GET requests, so it is necessary to specify an offset of 0 here.
     elif (request.method) == "GET":
         offset = 0
         
     single_page_response = requests.get(f"https://openpaymentsdata.cms.gov/api/1/datastore/query/66dfcf9a-2a9e-54b7-a0fe-cae3e42f3e8f?limit=50&offset={offset}")
-        
-    # all_payments = response.json()["results"]
     all_payments = single_page_response.json()["results"]
     
     # The following code returns all payments > $10. This is because all the fields in database are string types. Although the API offers using SQL in the endpoints as an option to return a specific query, it doesn't work when interacting with non-string types, such as floats, in this case. Therefore it must be manually done in this backend.
@@ -38,15 +37,3 @@ def DATA_ROUTE():
         payments_over_10.append(payment) if payment_int >= 10 else None
     
     return payments_over_10
-    
-# @app.route("/params/<one>/<two>", methods=["GET", "POST"])
-# def PARAMS_ROUTE(one, two):
-#     if (request.method) == "GET":
-#         return {
-#             "one": one,
-#             "two": two,
-#             "query": request.args.get("cheese")
-#         }
-#     if (request.method) == "POST":
-#         body = request.json #do i need () here for request?
-#         return body
